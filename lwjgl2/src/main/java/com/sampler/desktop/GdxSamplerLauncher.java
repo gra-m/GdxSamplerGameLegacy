@@ -7,18 +7,22 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 /**
  * This was only possible with the use of gdx-liftoff-1.12.0.3 allowing legacy lwjgl2 to be used.
  */
 public class GdxSamplerLauncher extends JFrame {
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 720;
+    private static final int CELL_WIDTH_CONTROL_PANEL = 200;
+    private static final int CANVAS_WIDTH = WIDTH - CELL_WIDTH_CONTROL_PANEL;
+
 
     // enables embedding of LibJdx into Java desktop app. Legacy not available in 3
     private LwjglAWTCanvas lwjglAWTCanvas;
+    private JList sampleList;
+    private JPanel controlPanel;
 
     public static void main(String[] args) {
         initializeJframeAfterAwtEventsCompleted();
@@ -38,9 +42,66 @@ public class GdxSamplerLauncher extends JFrame {
     }
 
     private void init(){
+        createControlPanel();
+        Container container = getContentPane();
+        container.add(controlPanel, BorderLayout.WEST);
+
         configureJFrame();
 
         launchSample("com.sampler.InputPollingSample");
+    }
+
+    private void createControlPanel() {
+        controlPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.gridx = 0; //col
+        c.gridy = 0; //row
+        c.fill =GridBagConstraints.VERTICAL;
+        c.weighty = 1; // has some row weight
+
+        sampleList = new JList<>(
+                new String[]{"com.sampler.InputPollingSample"}
+        );
+        sampleList.setFixedCellWidth(CELL_WIDTH_CONTROL_PANEL);
+        sampleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sampleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2)
+                    launchSelectedSample();
+            }
+        });
+
+        JScrollPane scrollPane = new JScrollPane(sampleList);
+        controlPanel.add(scrollPane, c);
+
+        // button
+        c.gridx = 0;
+        c.gridy = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weighty = 0;
+
+        JButton launchButton = new JButton("Launch Sample");
+        launchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                launchSelectedSample();
+            }
+        });
+
+        controlPanel.add(launchButton, c);
+    }
+
+    private void launchSelectedSample() {
+        String sampleName = (String)sampleList.getSelectedValue();
+
+        if(sampleName == null || sampleName.isEmpty()) {
+            System.out.println("Sample name is empty cannot launch");
+            return;
+        }
+        launchSample(sampleName);
+
     }
 
     private void configureJFrame() {
@@ -76,7 +137,7 @@ public class GdxSamplerLauncher extends JFrame {
 
         lwjglAWTCanvas = new LwjglAWTCanvas(sample);
 
-        lwjglAWTCanvas.getCanvas().setSize(WIDTH, HEIGHT);
+        lwjglAWTCanvas.getCanvas().setSize(CANVAS_WIDTH, HEIGHT);
 
         container.add(lwjglAWTCanvas.getCanvas(), BorderLayout.CENTER);
 
