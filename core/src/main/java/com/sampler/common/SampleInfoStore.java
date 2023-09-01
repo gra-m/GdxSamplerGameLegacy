@@ -15,7 +15,8 @@ public class SampleInfoStore {
         GdxReflectionSample.SAMPLE_INFO,
         GdxSamplerGame.SAMPLE_INFO,
         InputListeningSample.SAMPLE_INFO,
-        InputPollingSample.SAMPLE_INFO
+        InputPollingSample.SAMPLE_INFO,
+        OrthographicCameraSample.SAMPLE_INFO
     );
 
     public static List<String> getSampleNames() {
