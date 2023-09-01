@@ -5,9 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sampler.common.SampleBase;
+import com.sampler.common.SampleInfo;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class GdxSamplerGame extends ApplicationAdapter {
+public class GdxSamplerGame extends SampleBase {
+    public static final SampleInfo SAMPLE_INFO = new SampleInfo(GdxSamplerGame.class);
     private SpriteBatch batch;
     private Texture image;
 

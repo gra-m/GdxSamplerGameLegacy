@@ -1,11 +1,13 @@
 package com.sampler;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Logger;
+import com.sampler.common.SampleBase;
+import com.sampler.common.SampleInfo;
 
-public class ApplicationListenerSample implements ApplicationListener {
+public class ApplicationListenerSample extends SampleBase {
+    public static final SampleInfo SAMPLE_INFO = new SampleInfo(ApplicationListenerSample.class);
 	private static final Logger LOG = new Logger(ApplicationListenerSample.class.getName(), Logger.DEBUG);
 	private boolean renderInterruptedByPauseOrResume = true;
 
@@ -21,7 +23,7 @@ public class ApplicationListenerSample implements ApplicationListener {
 	}
 
 	/**
-	 * For setting new screen size 
+	 * For setting new screen size
 	 * Called when the {@link } is resized. This can happen at any point during a non-paused state but will never
 	 * happen before a call to {@link #create()}.
 	 *

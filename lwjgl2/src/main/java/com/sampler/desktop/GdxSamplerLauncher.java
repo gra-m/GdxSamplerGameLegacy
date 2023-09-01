@@ -4,6 +4,8 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.sampler.common.SampleFactory;
+import com.sampler.common.SampleInfoStore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +50,6 @@ public class GdxSamplerLauncher extends JFrame {
 
         configureJFrame();
 
-        launchSample("com.sampler.InputPollingSample");
     }
 
     private void createControlPanel() {
@@ -60,9 +61,7 @@ public class GdxSamplerLauncher extends JFrame {
         c.fill =GridBagConstraints.VERTICAL;
         c.weighty = 1; // has some row weight
 
-        sampleList = new JList<>(
-                new String[]{"com.sampler.InputPollingSample"}
-        );
+        sampleList = new JList(SampleInfoStore.getSampleNames().toArray());
         sampleList.setFixedCellWidth(CELL_WIDTH_CONTROL_PANEL);
         sampleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         sampleList.addMouseListener(new MouseAdapter() {
@@ -133,7 +132,8 @@ public class GdxSamplerLauncher extends JFrame {
 
         Container container = getCleanRootJframeContainer();
 
-        ApplicationListener sample = retrieveSampleByClassName(name);
+        //ApplicationListener sample = retrieveSampleByClassName(name);
+        ApplicationListener sample = SampleFactory.newSample(name);
 
         lwjglAWTCanvas = new LwjglAWTCanvas(sample);
 

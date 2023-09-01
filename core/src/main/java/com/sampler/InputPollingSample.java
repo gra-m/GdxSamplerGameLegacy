@@ -10,12 +10,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sampler.common.SampleBase;
+import com.sampler.common.SampleInfo;
 import com.sampler.utils.GdxUtils;
 
 import static com.badlogic.gdx.Gdx.input;
 
 
-public class InputPollingSample implements ApplicationListener {
+public class InputPollingSample extends SampleBase {
+    public static final SampleInfo SAMPLE_INFO = new SampleInfo(InputPollingSample.class);
     private final Logger LOG = new Logger(InputPollingSample.class.getName(), Logger.DEBUG);
     private OrthographicCamera camera;
     private Viewport viewport;
