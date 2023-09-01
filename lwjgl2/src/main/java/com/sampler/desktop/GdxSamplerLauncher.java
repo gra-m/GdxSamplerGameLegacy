@@ -54,13 +54,34 @@ public class GdxSamplerLauncher extends JFrame {
 
     private void createControlPanel() {
         controlPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
 
-        c.gridx = 0; //col
-        c.gridy = 0; //row
-        c.fill =GridBagConstraints.VERTICAL;
-        c.weighty = 1; // has some row weight
+        GridBagConstraints listConstraints = setGridBagConstraints(0, 0, GridBagConstraints.VERTICAL, 1);
+        GridBagConstraints buttonConstraints = setGridBagConstraints(0, 1, GridBagConstraints.HORIZONTAL, 0);
 
+        fillAndConfgureSampleList();
+
+        JScrollPane scrollPane = new JScrollPane(sampleList);
+        controlPanel.add(scrollPane, listConstraints);
+
+        JButton launchButton = createButton("Launch Sample");
+
+        controlPanel.add(launchButton, buttonConstraints);
+    }
+
+    private JButton createButton(String buttonLabel) {
+        JButton button = new JButton(buttonLabel);
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                launchSelectedSample();
+            }
+        });
+
+        return button;
+    }
+
+    private void fillAndConfgureSampleList() {
         sampleList = new JList(SampleInfoStore.getSampleNames().toArray());
         sampleList.setFixedCellWidth(CELL_WIDTH_CONTROL_PANEL);
         sampleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -71,25 +92,15 @@ public class GdxSamplerLauncher extends JFrame {
                     launchSelectedSample();
             }
         });
+    }
 
-        JScrollPane scrollPane = new JScrollPane(sampleList);
-        controlPanel.add(scrollPane, c);
-
-        // button
-        c.gridx = 0;
-        c.gridy = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-
-        JButton launchButton = new JButton("Launch Sample");
-        launchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                launchSelectedSample();
-            }
-        });
-
-        controlPanel.add(launchButton, c);
+    private GridBagConstraints setGridBagConstraints(int col, int row, int stackDirection, int weightInStack) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = col;
+        c.gridy = row;
+        c.fill = stackDirection;
+        c.weighty = weightInStack;
+        return c;
     }
 
     private void launchSelectedSample() {
@@ -132,7 +143,6 @@ public class GdxSamplerLauncher extends JFrame {
 
         Container container = getCleanRootJframeContainer();
 
-        //ApplicationListener sample = retrieveSampleByClassName(name);
         ApplicationListener sample = SampleFactory.newSample(name);
 
         lwjglAWTCanvas = new LwjglAWTCanvas(sample);
