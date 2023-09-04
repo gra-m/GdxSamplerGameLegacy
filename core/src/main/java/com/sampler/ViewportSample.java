@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.*;
 import com.sampler.common.SampleBase;
 import com.sampler.common.SampleInfo;
+import com.sampler.utils.GdxUtils;
 
 public class ViewportSample extends SampleBase {
     private static final Logger LOG = new Logger(ViewportSample.class.getName(), Logger.DEBUG);
@@ -43,6 +44,25 @@ public class ViewportSample extends SampleBase {
         createViewports();
         selectNextViewport();
 
+        Gdx.input.setInputProcessor(this);
+
+    }
+
+    @Override
+    public void render() {
+        GdxUtils.clearScreen();
+
+        batch.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+        draw();
+        batch.end();
+    }
+
+    private void draw() {
+        batch.draw(texture, 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+        font.draw(batch, currentViewportName, 50, 100);
+
     }
 
     private void selectNextViewport() {
@@ -52,7 +72,7 @@ public class ViewportSample extends SampleBase {
         currentViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         currentViewportName = viewports.getKeyAt(currentViewportIndex);
 
-        LOG.debug(String.format("Selected viewport is key = %s at index = %d", currentViewportName, currentViewportIndex)));
+        LOG.debug(String.format("Selected viewport is key = %s at index = %d", currentViewportName, currentViewportIndex));
 
     }
 
@@ -77,10 +97,17 @@ public class ViewportSample extends SampleBase {
     }
 
     private void createViewports() {
+        //Virtual screensize -> world screensize that has been defined in world units
+        // Screen will always be virtual height by virtual width but aspect ratio is dynamic after scaling
         viewports.put(StretchViewport.class.getSimpleName(), new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera));
+        // Black bars but supports virtual screensize -> always maintains aspect ratio of our virtual world size
+        // RECOMMENDED
         viewports.put(FitViewport.class.getSimpleName(), new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera));
+        // Fill also keeps aspect ration, but will always fill the whole screen
         viewports.put(FillViewport.class.getSimpleName(), new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera));
+         // does not have constant virtual screens size gameplay changes player to player dependent on screensize.
         viewports.put(ScreenViewport.class.getSimpleName(), new ScreenViewport(camera));
+        // extends in one direction scaled to viewport size and then the shorter dimension is lengthened to fill it.
         viewports.put(ExtendViewport.class.getSimpleName(), new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera));
 
         currentViewportIndex = -1;
