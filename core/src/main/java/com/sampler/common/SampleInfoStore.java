@@ -17,7 +17,9 @@ public class SampleInfoStore {
         InputListeningSample.SAMPLE_INFO,
         InputPollingSample.SAMPLE_INFO,
         OrthographicCameraSample.SAMPLE_INFO,
-        ViewportSample.SAMPLE_INFO
+        ViewportSample.SAMPLE_INFO,
+        SpriteBatchSample.SAMPLE_INFO
+
 
     );
 
