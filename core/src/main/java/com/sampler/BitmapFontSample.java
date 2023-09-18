@@ -3,6 +3,7 @@ package com.sampler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -23,6 +24,7 @@ public class BitmapFontSample extends SampleBase
     private SpriteBatch batch;
     private BitmapFont uIFont;
     private BitmapFont uiEffectFont;
+    private GlyphLayout glyphLayout;
 
     @Override
     public void create( )
@@ -30,8 +32,11 @@ public class BitmapFontSample extends SampleBase
         camera = new OrthographicCamera(  );
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
         batch = new SpriteBatch();
+        glyphLayout = new GlyphLayout();
         uIFont = new BitmapFont( Gdx.files.internal("fonts/ui_font_32.fnt") );
+        uIFont.getData().markupEnabled = true;
         uiEffectFont = new BitmapFont( Gdx.files.internal("fonts/ui_eff_font_32.fnt") );
+
     }
 
     @Override
@@ -46,8 +51,16 @@ public class BitmapFontSample extends SampleBase
     }
 
     private void draw( ) {
-        String string1 = "Using bitmap font created in Hiero";
-        uiEffectFont.draw(batch, string1, 0, 32);
+        String string1 = "USING CAPS ONLY BITMAP FONT CREATED IN HIERO!";
+        uiEffectFont.draw(batch, string1, 20, HEIGHT);
+        String string2 = "GLYPHLAYOUT.SET-TEXT == PLACE CORRECTLY ON SCREEN!";
+        glyphLayout.setText(uIFont, string2);
+        uiEffectFont.draw(batch, string2,
+            (WIDTH - glyphLayout.width) / 2f,
+            (HEIGHT -  glyphLayout.height) / 2f );
+
+        String string3 = "[#FF0000]WRAPPING [BLUE]TEXT [GREEN]170 W [YELLOW]U MARKUP ENABLED";
+        uIFont.draw(batch, string3,40, 200, 170, -1, true);
     }
 
     @Override
