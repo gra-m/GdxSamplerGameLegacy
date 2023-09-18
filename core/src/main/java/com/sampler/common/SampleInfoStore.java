@@ -19,7 +19,8 @@ public class SampleInfoStore {
         OrthographicCameraSample.SAMPLE_INFO,
         ViewportSample.SAMPLE_INFO,
         SpriteBatchSample.SAMPLE_INFO,
-        ShapeRendererSample.SAMPLE_INFO
+        ShapeRendererSample.SAMPLE_INFO,
+        BitmapFontSample.SAMPLE_INFO
 
     );
 
