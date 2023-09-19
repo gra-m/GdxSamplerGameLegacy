@@ -1,7 +1,6 @@
 package com.sampler.common;
 
 import com.sampler.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,8 +19,9 @@ public class SampleInfoStore {
         ViewportSample.SAMPLE_INFO,
         SpriteBatchSample.SAMPLE_INFO,
         ShapeRendererSample.SAMPLE_INFO,
-        BitmapFontSample.SAMPLE_INFO
-
+        BitmapFontSample.SAMPLE_INFO,
+        PoolingSampleOne.SAMPLE_INFO,
+        PoolingSampleOneB.SAMPLE_INFO
     );
 
     public static List<String> getSampleNames() {
