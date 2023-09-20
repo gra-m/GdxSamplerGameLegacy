@@ -21,7 +21,9 @@ public class SampleInfoStore {
         ShapeRendererSample.SAMPLE_INFO,
         BitmapFontSample.SAMPLE_INFO,
         PoolingSampleOne.SAMPLE_INFO,
-        PoolingSampleOneB.SAMPLE_INFO
+        PoolingSampleOneB.SAMPLE_INFO,
+        AssetManagerSample.SAMPLE_INFO
+
     );
 
     public static List<String> getSampleNames() {
