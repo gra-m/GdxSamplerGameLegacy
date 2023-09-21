@@ -22,7 +22,8 @@ public class SampleInfoStore {
         BitmapFontSample.SAMPLE_INFO,
         PoolingSampleOne.SAMPLE_INFO,
         PoolingSampleOneB.SAMPLE_INFO,
-        AssetManagerSample.SAMPLE_INFO
+        AssetManagerSample.SAMPLE_INFO,
+        TextureAtlasSample.SAMPLE_INFO
 
     );
 
