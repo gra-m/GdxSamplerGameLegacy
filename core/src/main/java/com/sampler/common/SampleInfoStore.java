@@ -23,8 +23,8 @@ public class SampleInfoStore {
         PoolingSampleOne.SAMPLE_INFO,
         PoolingSampleOneB.SAMPLE_INFO,
         AssetManagerSample.SAMPLE_INFO,
-        TextureAtlasSample.SAMPLE_INFO
-
+        TextureAtlasSample.SAMPLE_INFO,
+        CustomActorSample.SAMPLE_INFO
     );
 
     public static List<String> getSampleNames() {
