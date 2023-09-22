@@ -17,7 +17,6 @@ public class CustomActor extends Actor
 
     @Override
     public void act( float delta ) {
-        LOG.debug("act on actor = " + this);
         super.act(delta);
     }
 
