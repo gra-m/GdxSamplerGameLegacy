@@ -28,6 +28,7 @@ public class AshleySystemSample extends SampleBase
     private static final float WORLD_WIDTH = 10.8f; // world units
     private static final float WORLD_HEIGHT = 7.2f;
     private static final String LEVEL_BG = "raw/level-bg.png";
+    private static final String CHAR = "raw/character.png";
 
     private AssetManager assetManager;
     private Viewport viewport;
@@ -49,46 +50,55 @@ public class AshleySystemSample extends SampleBase
 
         // load assets
         assetManager.load(LEVEL_BG, Texture.class);
+        assetManager.load(CHAR, Texture.class);
         assetManager.finishLoading();
 
         // how a background is composed of / has components in Ashley, rather than being e.g. a child class of e.g
         // GameObject
-        composeBackground();
+        composeAndAddPositionSizeAndTextureEntity(LEVEL_BG, true);
+        composeAndAddPositionSizeAndTextureEntity(CHAR, false);
+        
 
         engine.addSystem(new RenderSystem(viewport, batch));
     }
 
-    private void composeBackground( ) {
+    private void composeAndAddPositionSizeAndTextureEntity(String texturePath, Boolean background ) {
 
         // initialize components that background will have:
         Array< Component> components = new Array<>(3);
-        components = initializeBackgroundComponents(components);
+        Array<Component> initializedComponents = initializeComponents(components, texturePath, background);
 
         // initialize backgroundEntity
-        Entity  backgroundEntity = new Entity();
+        Entity  entity = new Entity();
 
         // add components background entity needs:
-        for(Component c : components) {
-            backgroundEntity.add(c);
+        for(Component c : initializedComponents) {
+            entity.add(c);
             LOG.debug(String.format("Have just added: %s", c.getClass().getSimpleName()));
         }
         // add background entity to our world
-        engine.addEntity(backgroundEntity);
+        engine.addEntity(entity);
 
         LOG.debug("texture retrieved from the entity just added to the engine FORGOT TO RESIZE VIEWPORT = " +
                 engine.getEntities().get(0).getComponent(TextureComponent.class).texture.toString());
     }
 
-    private Array< Component> initializeBackgroundComponents(Array<Component> components ) {
+    private Array< Component> initializeComponents( Array<Component> components, String texturePath,
+                                                    boolean background ) {
 
         PositionComponent position = new PositionComponent();
         position.x = 0;
         position.y = 0;
         SizeComponent size = new SizeComponent();
-        size.width = WORLD_WIDTH;
-        size.height = WORLD_HEIGHT;
+        if (background) {
+            size.width = WORLD_WIDTH;
+            size.height = WORLD_HEIGHT;
+        }else {
+            size.width = 2f;
+            size.height = 2f;
+        }
         TextureComponent texture = new TextureComponent();
-        texture.texture = assetManager.get(LEVEL_BG);
+        texture.texture = assetManager.get(texturePath);
         components.add(position, size, texture);
 
         return components;
