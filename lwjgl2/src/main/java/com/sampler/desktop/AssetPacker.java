@@ -17,7 +17,7 @@ public class AssetPacker
         settings.maxWidth = 2048;
         settings.maxHeight = 2048;
 
-        TexturePacker.process(settings, RAW_ASSETS_PATH + "/gameplay", ASSETS_PATH + "/gameplay", "gameplay");
+        TexturePacker.process(settings, RAW_ASSETS_PATH + "/skin", ASSETS_PATH + "/ui", "uiskin");
     }
 
 
