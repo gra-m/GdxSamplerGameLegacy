@@ -19,6 +19,7 @@ import com.sampler.common.SampleBase;
 import com.sampler.common.SampleInfo;
 import com.sampler.utils.GdxUtils;
 
+//saw and coded with guidance from file, then watched video and realised had jumped forward...
 public class AshleySystemSample extends SampleBase
 {
     public static final SampleInfo SAMPLE_INFO = new SampleInfo(AshleySystemSample.class);
