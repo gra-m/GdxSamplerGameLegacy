@@ -3,7 +3,6 @@ package com.sampler;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -71,12 +70,13 @@ public class AshleySystemSample extends SampleBase
         // add components background entity needs:
         for(Component c : components) {
             backgroundEntity.add(c);
-            LOG.debug(String.format("%s", c.getClass().getSimpleName()));
+            LOG.debug(String.format("Have just added: %s", c.getClass().getSimpleName()));
         }
-
-
         // add background entity to our world
         engine.addEntity(backgroundEntity);
+
+        LOG.debug("texture retrieved from the entity just added to the engine FORGOT TO RESIZE VIEWPORT = " +
+                engine.getEntities().get(0).getComponent(TextureComponent.class).texture.toString());
     }
 
     private Array< Component> initializeBackgroundComponents(Array<Component> components ) {
@@ -98,7 +98,7 @@ public class AshleySystemSample extends SampleBase
     @Override
     public void resize( int width, int height )
     {
-        super.resize(width, height);
+        viewport.update(width, height, true);
     }
 
     @Override
