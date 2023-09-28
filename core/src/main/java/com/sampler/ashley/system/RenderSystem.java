@@ -1,9 +1,6 @@
 package com.sampler.ashley.system;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Logger;
@@ -22,11 +19,23 @@ public class RenderSystem extends EntitySystem
             SizeComponent.class,
             TextureComponent.class
     ).get();
+    private static final ComponentMapper<PositionComponent> POSITION =
+            ComponentMapper.getFor(PositionComponent.class);
+    private static final ComponentMapper<SizeComponent> SIZE =
+            ComponentMapper.getFor(SizeComponent.class);
+    private static final ComponentMapper<TextureComponent> TEXTURE =
+            ComponentMapper.getFor(TextureComponent.class);
+
+
     private Viewport viewport;
     private SpriteBatch batch;
     private ImmutableArray< Entity > entities;
 
 
+    public RenderSystem(Viewport viewport, SpriteBatch batch) {
+        this.viewport = viewport;
+        this.batch = batch;
+    }
 
     // entities array matching this family is created once this method is called, that is once this system is added
     // to engine
@@ -56,8 +65,13 @@ public class RenderSystem extends EntitySystem
     }
 
     private void draw( ) {
-        for (Entity e : entities)// drawing without component mapper is slow..
+        for (Entity e : entities) {
+            TextureComponent texture = TEXTURE.get(e);
+            PositionComponent position = POSITION.get(e);
+            SizeComponent size = SIZE.get(e);
+            batch.draw(texture.texture,
+                    position.x, position.y,
+                    size.width, size.height);
+        }
     }
-
-
 }

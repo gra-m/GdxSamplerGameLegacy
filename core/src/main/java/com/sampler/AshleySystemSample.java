@@ -3,6 +3,7 @@ package com.sampler;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sampler.ashley.component.PositionComponent;
 import com.sampler.ashley.component.SizeComponent;
 import com.sampler.ashley.component.TextureComponent;
+import com.sampler.ashley.system.RenderSystem;
 import com.sampler.common.SampleBase;
 import com.sampler.common.SampleInfo;
 import com.sampler.utils.GdxUtils;
@@ -53,19 +55,25 @@ public class AshleySystemSample extends SampleBase
         // how a background is composed of / has components in Ashley, rather than being e.g. a child class of e.g
         // GameObject
         composeBackground();
+
+        engine.addSystem(new RenderSystem(viewport, batch));
     }
 
     private void composeBackground( ) {
+
+        // initialize components that background will have:
         Array< Component> components = new Array<>(3);
         components = initializeBackgroundComponents(components);
-        // initialize components that background will have:
 
         // initialize backgroundEntity
         Entity  backgroundEntity = new Entity();
 
         // add components background entity needs:
-        for(Component c : components)
-           backgroundEntity.add(c);
+        for(Component c : components) {
+            backgroundEntity.add(c);
+            LOG.debug(String.format("%s", c.getClass().getSimpleName()));
+        }
+
 
         // add background entity to our world
         engine.addEntity(backgroundEntity);
