@@ -19,7 +19,6 @@ import com.sampler.common.SampleBase;
 import com.sampler.common.SampleInfo;
 import com.sampler.utils.GdxUtils;
 
-//saw and coded with guidance from file, then watched video and realised had jumped forward...
 public class AshleySystemSample extends SampleBase
 {
     public static final SampleInfo SAMPLE_INFO = new SampleInfo(AshleySystemSample.class);
@@ -37,7 +36,7 @@ public class AshleySystemSample extends SampleBase
     private SpriteBatch batch;
     private Engine engine;
     private Entity entityForListener;
-    private TextureComponent texture;
+    private TextureComponent textureForListener;
 
 
     @Override
@@ -64,13 +63,7 @@ public class AshleySystemSample extends SampleBase
         composeAndAddPositionSizeAndTextureEntity(LEVEL_BG, true);
         composeAndAddPositionSizeAndTextureEntity(CHAR, false);
 
-        // Start::::this entity is just to toggle on and off within listener
-        entityForListener = new Entity();
-        texture = new TextureComponent();
-        texture.texture = assetManager.get(CHAR);
-        entityForListener.add(texture);
-        engine.addEntity(entityForListener);
-        // Logs from --EL--
+
         engine.addEntityListener(TEXTURE_COMPONENT_FAMILY, new EntityListener( )
         {
             @Override
@@ -89,8 +82,7 @@ public class AshleySystemSample extends SampleBase
                 LOG.debug("-EntityListener for TEXTURE_COMPONENT_FAMILY says: entity just removed from family ");
             }
         });
-        //End::::
-        
+
 
         engine.addSystem(new RenderSystem(viewport, batch));
     }
@@ -110,6 +102,9 @@ public class AshleySystemSample extends SampleBase
             LOG.debug(String.format("Have just added: %s", c.getClass().getSimpleName()));
         }
         // add entity to our world
+        if(!background) // if character entityForListener is also entity reference R/A will remove and add it.
+            entityForListener = entity;
+
         engine.addEntity(entity);
 
         LOG.debug("texture retrieved from the entity just added to the engine FORGOT TO RESIZE VIEWPORT = " +
@@ -133,7 +128,8 @@ public class AshleySystemSample extends SampleBase
         TextureComponent texture = new TextureComponent();
         texture.texture = assetManager.get(texturePath);
         components.add(position, size, texture);
-
+        if(!background) // if character texture for listener refercence = texture
+            textureForListener = texture;
         return components;
 
     }
@@ -147,7 +143,7 @@ public class AshleySystemSample extends SampleBase
             }
         } else if (keycode == Input.Keys.A ) {
             if (!TEXTURE_COMPONENT_FAMILY.matches(entityForListener)) {
-                entityForListener.add(texture);
+                entityForListener.add(textureForListener);
             }
         }
         return true;
