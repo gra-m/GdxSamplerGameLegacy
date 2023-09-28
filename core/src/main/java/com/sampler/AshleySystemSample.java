@@ -1,10 +1,9 @@
 package com.sampler;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.*;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,11 +28,15 @@ public class AshleySystemSample extends SampleBase
     private static final float WORLD_HEIGHT = 7.2f;
     private static final String LEVEL_BG = "raw/level-bg.png";
     private static final String CHAR = "raw/character.png";
-
+    private static final Family TEXTURE_COMPONENT_FAMILY =  Family.all(
+            TextureComponent.class
+    ).get();
     private AssetManager assetManager;
     private Viewport viewport;
     private SpriteBatch batch;
     private Engine engine;
+    private Entity entityForListener;
+    private TextureComponent texture;
 
 
     @Override
@@ -53,10 +56,39 @@ public class AshleySystemSample extends SampleBase
         assetManager.load(CHAR, Texture.class);
         assetManager.finishLoading();
 
+        Gdx.input.setInputProcessor(this);
+
         // how a background is composed of / has components in Ashley, rather than being e.g. a child class of e.g
         // GameObject
         composeAndAddPositionSizeAndTextureEntity(LEVEL_BG, true);
         composeAndAddPositionSizeAndTextureEntity(CHAR, false);
+
+        // Start::::this entity is just to toggle on and off within listener
+        entityForListener = new Entity();
+        texture = new TextureComponent();
+        texture.texture = assetManager.get(CHAR);
+        entityForListener.add(texture);
+        engine.addEntity(entityForListener);
+        // Logs from --EL--
+        engine.addEntityListener(TEXTURE_COMPONENT_FAMILY, new EntityListener( )
+        {
+            @Override
+            public void entityAdded( Entity entity )
+            {
+               LOG.debug("+EntityListener for TEXTURE_COMPONENT_FAMILY says: family size = " + engine.getEntitiesFor(TEXTURE_COMPONENT_FAMILY).size());
+               LOG.debug("+EntityListener for TEXTURE_COMPONENT_FAMILY says: total size = " + engine.getEntities().size());
+               LOG.debug("+EntityListener for TEXTURE_COMPONENT_FAMILY says: entity just added to family");
+            }
+
+            @Override
+            public void entityRemoved( Entity entity )
+            {
+                LOG.debug("-EntityListener for TEXTURE_COMPONENT_FAMILY says: family size = " + engine.getEntitiesFor(TEXTURE_COMPONENT_FAMILY).size());
+                LOG.debug("-EntityListener for TEXTURE_COMPONENT_FAMILY says: total size = " + engine.getEntities().size());
+                LOG.debug("-EntityListener for TEXTURE_COMPONENT_FAMILY says: entity just removed from family ");
+            }
+        });
+        //End::::
         
 
         engine.addSystem(new RenderSystem(viewport, batch));
@@ -68,7 +100,7 @@ public class AshleySystemSample extends SampleBase
         Array< Component> components = new Array<>(3);
         Array<Component> initializedComponents = initializeComponents(components, texturePath, background);
 
-        // initialize backgroundEntity
+        // initialize entity
         Entity  entity = new Entity();
 
         // add components background entity needs:
@@ -76,7 +108,7 @@ public class AshleySystemSample extends SampleBase
             entity.add(c);
             LOG.debug(String.format("Have just added: %s", c.getClass().getSimpleName()));
         }
-        // add background entity to our world
+        // add entity to our world
         engine.addEntity(entity);
 
         LOG.debug("texture retrieved from the entity just added to the engine FORGOT TO RESIZE VIEWPORT = " +
@@ -103,6 +135,21 @@ public class AshleySystemSample extends SampleBase
 
         return components;
 
+    }
+
+    @Override
+    public boolean keyUp( int keycode )
+    {
+        if(keycode == Input.Keys.R) {
+            if(TEXTURE_COMPONENT_FAMILY.matches(entityForListener)) {
+                entityForListener.remove(TextureComponent.class);
+            }
+        } else if (keycode == Input.Keys.A ) {
+            if (!TEXTURE_COMPONENT_FAMILY.matches(entityForListener)) {
+                entityForListener.add(texture);
+            }
+        }
+        return true;
     }
 
     @Override
